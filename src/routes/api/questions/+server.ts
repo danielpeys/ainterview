@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
-import type { GPTResponse } from '../../../lib/types.js';
+import type { GPTResponse, POSTRequestBody } from '../../../lib/types.js';
 
 async function getWebsiteData(url: string) {
   try {
@@ -64,6 +64,39 @@ export async function GET({ url }) {
   }
 
   const questions = await getQuestions(jobDescription);
+
+  if (!questions) {
+    throw error(500, {
+      message: 'Generating questions failed',
+    });
+  }
+
+  return new Response(questions);
+}
+
+export async function POST({ request }) {
+  if (request.body === null) {
+    throw error(400, {
+      message: 'Request body is empty',
+    });
+  }
+
+  const jobDescription = ((await request.json()) as POSTRequestBody)
+    .jobDescription;
+
+  if (!jobDescription) {
+    throw error(400, {
+      message: 'Request body is invalid',
+    });
+  }
+
+  const questions = await getQuestions(jobDescription);
+
+  if (!questions) {
+    throw error(500, {
+      message: 'Generating questions failed',
+    });
+  }
 
   return new Response(questions);
 }

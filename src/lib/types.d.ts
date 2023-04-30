@@ -18,3 +18,7 @@ export type GPTResponse = {
     total_tokens: number;
   };
 };
+
+export type POSTRequestBody = {
+  jobDescription: string;
+};
