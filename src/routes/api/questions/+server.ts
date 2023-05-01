@@ -1,7 +1,10 @@
 import * as cheerio from 'cheerio';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
-import type { GPTResponse, POSTRequestBody } from '../../../lib/types.js';
+import type {
+  GPTResponse,
+  POSTJobDescrRequestBody,
+} from '../../../lib/types.js';
 
 async function getWebsiteData(url: string) {
   try {
@@ -28,7 +31,7 @@ async function getQuestions(jobDescription: string) {
     messages: [
       {
         role: 'user',
-        content: `Write 10 interview questions for this job description ${jobDescription}`,
+        content: `Write 10 interview questions for this job description "${jobDescription}" return the questions in a JSON Format like this {"title:"title of the job", questions":[{"question":"Question1"}]}`,
       },
     ],
   });
@@ -81,7 +84,7 @@ export async function POST({ request }) {
     });
   }
 
-  const jobDescription = ((await request.json()) as POSTRequestBody)
+  const jobDescription = ((await request.json()) as POSTJobDescrRequestBody)
     .jobDescription;
 
   if (!jobDescription) {

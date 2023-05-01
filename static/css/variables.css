@@ -1,0 +1,24 @@
+:root {
+  --col-blue: #4235ef;
+  --col-green: #0abf50;
+  --col-purple: #6435ef;
+  --col-gray: #2f3a4c;
+  --col-black: #000;
+  --col-white: #fff;
+
+  --font-size-xxs: 0.7rem;
+  --font-size-xs: 0.9rem;
+  --font-size-small: 1.15rem;
+  --font-size-medium: 1.2rem;
+  --font-size-large: 1.4rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xxl: 1.7rem;
+  --font-size-title: 2.5rem;
+
+  --spacer-6: 54px;
+  --spacer-5: 45px;
+  --spacer-4: 36px;
+  --spacer-3: 27px;
+  --spacer-2: 18px;
+  --spacer-1: 9px;
+}

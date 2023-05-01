@@ -1,0 +1,8 @@
+@font-face {
+	font-family: 'Armino';
+	src: url('../fonts/Arimo-Regular.ttf') format('woff2');
+}
+
+html {
+	font-family: Armino;
+}

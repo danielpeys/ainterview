@@ -19,6 +19,11 @@ export type GPTResponse = {
   };
 };
 
-export type POSTRequestBody = {
+export type POSTJobDescrRequestBody = {
   jobDescription: string;
+};
+
+export type POSTEvalRequestBody = {
+  question: string;
+  answer: string;
 };
