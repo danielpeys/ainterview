@@ -36,6 +36,7 @@
     align-items: end;
     min-width: 500px;
     margin-right: var(--spacer-5);
+    margin: auto;
   }
 
   .h2-container {
@@ -141,5 +142,53 @@
   .text-input-group button:hover {
     transform: scale(1.02);
     transition: 0.1s linear;
+  }
+
+  @media only screen and (max-width: 1000px) {
+    .container {
+      margin-top: var(--spacer-6);
+    }
+
+    .text-input-group {
+      width: 100%;
+    }
+    .text-input-group textarea {
+      width: 500px;
+      margin: auto;
+    }
+  }
+
+  @media only screen and (max-width: 550px) {
+    .container {
+      align-items: center;
+    }
+    .url-input-group input {
+      width: 400px;
+    }
+
+    .text-input-group {
+      width: 350px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .text-input-group textarea {
+      width: 350px;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    .url-input-group input {
+      width: 350px;
+    }
+
+    .h2-container {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: var(--font-size-small);
+    }
   }
 </style>

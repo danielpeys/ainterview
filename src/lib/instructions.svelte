@@ -168,11 +168,22 @@
     margin-left: 5px;
   }
 
-  @media only screen and (max-width: 970px) {
+  @media only screen and (max-width: 1000px) {
     .container {
-      margin-left: 0px;
+      width: 500px;
+      margin: 75px auto 100px;
+    }
+  }
+
+  @media only screen and (max-width: 550px) {
+    .container {
+      width: 350px;
+    }
+  }
+
+  @media only screen and (max-width: 550px) {
+    .container {
       margin-top: 50px;
-      width: 300px;
     }
   }
 </style>

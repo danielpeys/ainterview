@@ -44,4 +44,11 @@
   .container-content {
     display: flex;
   }
+
+  @media only screen and (max-width: 1000px) {
+    .container-content {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 </style>
