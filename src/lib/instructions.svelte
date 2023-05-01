@@ -61,7 +61,7 @@
         />
         <div class="how-to-text">
           <h2>ANSWER THE QUESTION</h2>
-          <p>Answer the question by voice or text</p>
+          <p>Answer the question by text</p>
         </div>
       </div>
     {:else if count === 3}

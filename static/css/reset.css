@@ -1,26 +1,27 @@
 *,
 *::after,
 *::before {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 * {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-	scroll-behavior: smooth;
+  height: 100%;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f1f1 50%, #cccccc 100%);
 }
 
 a {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 button:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 input {
-	font-family: Armino;
+  font-family: Armino;
 }
