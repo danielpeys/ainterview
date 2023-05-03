@@ -37,3 +37,8 @@ button:hover {
 input {
   font-family: Armino;
 }
+
+input:focus,
+textarea:focus {
+  outline: none;
+}

@@ -43,6 +43,7 @@
 
   .container-content {
     display: flex;
+    margin-top: var(--spacer-7);
   }
 
   @media only screen and (max-width: 1000px) {

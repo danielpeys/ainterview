@@ -1,5 +1,11 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+
   let isURLInput = true;
+
+  function startInterview() {
+    goto('/interview');
+  }
 </script>
 
 <div class="container">
@@ -9,7 +15,7 @@
     </div>
     <div class="url-input-group">
       <input type="text" />
-      <button class="btn">START</button>
+      <button class="btn" on:click={startInterview}>START</button>
     </div>
   {:else}
     <div class="h2-container">
@@ -88,11 +94,6 @@
     font-size: var(--font-size-xxl);
     width: 500px;
     border-width: 2.2px;
-  }
-
-  .url-input-group input:focus,
-  .text-input-group textarea:focus {
-    outline: none;
   }
 
   .url-input-group button {
