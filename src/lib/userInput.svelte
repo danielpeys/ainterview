@@ -1,37 +1,96 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import CssLoader from './css-loader.svelte';
+
+  enum RequestType {
+    GET,
+    POST,
+  }
 
   let isURLInput = true;
+  let isLoading = false;
+  let url: string;
+  let jobDescription: string;
+  let questions;
 
-  function startInterview() {
+  async function startInterview(requestType: RequestType) {
+    let result;
+    isLoading = true;
+
+    try {
+      let response;
+      if (requestType === RequestType.GET) {
+        response = await fetch(
+          `http://127.0.0.1:5173/api/questions?url=${url}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      } else {
+        response = await fetch('http://127.0.0.1:5173/api/questions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ jobDescription: jobDescription }),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      result = await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+      return;
+    }
+    console.log(result);
+    questions = result;
     goto('/interview');
   }
 </script>
 
 <div class="container">
-  {#if isURLInput}
+  {#if isURLInput && !isLoading}
     <div class="h2-container">
       <h2>Provide the URL of the Job Description</h2>
     </div>
     <div class="url-input-group">
-      <input type="text" />
-      <button class="btn" on:click={startInterview}>START</button>
+      <input type="text" bind:value={url} />
+      <button class="btn" on:click={() => startInterview(RequestType.GET)}
+        >START</button
+      >
     </div>
-  {:else}
+  {:else if !isLoading}
     <div class="h2-container">
       <h2>Provide the Text of the Job Description</h2>
     </div>
     <div class="text-input-group">
-      <textarea name="longText" rows="20" cols="80" />
-      <button class="btn">START</button>
+      <textarea
+        name="longText"
+        rows="20"
+        cols="80"
+        bind:value={jobDescription}
+      />
+      <button class="btn" on:click={() => startInterview(RequestType.POST)}
+        >START</button
+      >
     </div>
+  {:else}
+    <CssLoader />
   {/if}
-  <button
-    class="btn"
-    on:click={() => {
-      isURLInput = !isURLInput;
-    }}>Swtich to {isURLInput ? 'text' : 'URL'}</button
-  >
+  {#if !isLoading}
+    <button
+      class="btn"
+      on:click={() => {
+        isURLInput = !isURLInput;
+      }}>Swtich to {isURLInput ? 'text' : 'URL'}</button
+    >
+  {/if}
 </div>
 
 <style>
@@ -112,7 +171,7 @@
   }
 
   .url-input-group button:hover {
-    opacity: 0.9;
+    background-color: var(--col-blue);
     transition: 0.25s ease-out;
   }
 
