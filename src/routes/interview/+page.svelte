@@ -1,7 +1,12 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
+  import { questionsStore } from '../../lib/stores';
 
   let isAnswering = false;
+
+  questionsStore.subscribe((value) => {
+    console.log(value.questions);
+  });
 </script>
 
 <div class="page">

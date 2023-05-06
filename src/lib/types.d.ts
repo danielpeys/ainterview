@@ -27,3 +27,8 @@ export type POSTEvalRequestBody = {
   question: string;
   answer: string;
 };
+
+export type QuestionsResponse = {
+  title: string;
+  questions: { question: string }[];
+};

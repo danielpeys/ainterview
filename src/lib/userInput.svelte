@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { questionsStore } from './stores';
   import CssLoader from './css-loader.svelte';
 
   enum RequestType {
@@ -11,7 +12,6 @@
   let isLoading = false;
   let url: string;
   let jobDescription: string;
-  let questions;
 
   async function startInterview(requestType: RequestType) {
     let result;
@@ -48,8 +48,8 @@
       console.error('Error:', error);
       return;
     }
-    console.log(result);
-    questions = result;
+    $questionsStore = result;
+
     goto('/interview');
   }
 </script>
