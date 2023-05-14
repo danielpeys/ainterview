@@ -49,6 +49,17 @@
       console.error('Error:', error);
     }
   }
+
+  function reset() {
+    isAnswering = true;
+    gotAnswer = false;
+    answer = '';
+  }
+
+  function nextQuestion() {
+    reset();
+    if (progressCount < questions.length) progressCount += 1;
+  }
 </script>
 
 <div class="page">
@@ -57,44 +68,27 @@
       {questions[progressCount].question}
     </h1>
 
-    <!-- change back to gotAnswer -->
-    {#if true}
-      <!-- <p>{score}/10</p>
-      <p>Answer was correct: {answerIsCorrect}</p> -->
+    {#if gotAnswer}
       <div class="stats">
-        <p>4/10</p>
-        <p>The answer was correct</p>
-        <p>🥳</p>
+        <p>{score}/10</p>
+        <p>
+          {answerIsCorrect
+            ? 'The answer was correct'
+            : 'The answer was not correct'}
+        </p>
+        <p>{answerIsCorrect ? '🥳' : '😞'}</p>
       </div>
       <div class="positive-feedback-container">
-        <!-- <h3>What was good:</h3>
-        <p>{positiveFeedback}</p> -->
         <h3>What was good:</h3>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac justo
-          sed urna convallis faucibus. Quisque eu tellus eu nibh commodo
-          interdum nec vitae metus. Sed mollis eleifend augue, sit amet
-          ultricies metus volutpat in. Nulla facilisi. Aliquam vitae risus quam.
-          Integer fringilla odio ac elit efficitur convallis.
-        </p>
+        <p>{positiveFeedback}</p>
       </div>
       <div class="improvement-container">
-        <!-- <h3>What can be improved</h3>
-        <p>{improvementSuggestion}</p> -->
         <h3>What can be improved</h3>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac justo
-          sed urna convallis faucibus. Quisque eu tellus eu nibh commodo
-          interdum nec vitae metus. Sed mollis eleifend augue, sit amet
-          ultricies metus volutpat in. Nulla facilisi. Aliquam vitae risus quam.
-          Integer fringilla odio ac elit efficitur convallis.
-        </p>
+        <p>{improvementSuggestion}</p>
       </div>
       <div class="question-control-btns">
-        <button class="btn primary-btn" on:click={() => console.log('ok')}
-          >Try again</button
-        >
-        <button class="btn primary-btn" on:click={() => console.log('ok')}
+        <button class="btn primary-btn" on:click={reset}>Try again</button>
+        <button class="btn primary-btn" on:click={nextQuestion}
           >Next question</button
         >
       </div>
@@ -102,7 +96,7 @@
       <textarea
         cols="50"
         rows="10"
-        transition:scale={{ duration: 700 }}
+        in:scale={{ duration: 700 }}
         bind:value={answer}
       />
       <button
