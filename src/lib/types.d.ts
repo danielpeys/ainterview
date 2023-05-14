@@ -32,3 +32,10 @@ export type QuestionsResponse = {
   title: string;
   questions: { question: string }[];
 };
+
+export type EvaluationResponse = {
+  score: number;
+  correct: boolean;
+  positive: string;
+  improvement: string;
+};

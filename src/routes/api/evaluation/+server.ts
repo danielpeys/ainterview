@@ -13,7 +13,7 @@ async function getEvaluation(question: string, answer: string) {
     messages: [
       {
         role: 'user',
-        content: `We are in an Job Interview and I got the question: "${question}". My answer was: "${answer}". Please evaluate the answer in this JSON format: Score: Give the answer a score from 0 - 10, Correct: Was the answer correct (If yes answer just true, if no say why), Positive: What was good about the answer in 1 - 5 sentences, Improvement: What can be improved in 1 to 5 sentences`,
+        content: `We are in an Job Interview and I got the question: "${question}". My answer was: "${answer}". Please evaluate the answer in this JSON format: score: Give the answer a score from 0 - 10, correct: Was the answer correct (If yes answer just true, if no say why), positive: What was good about the answer in 1 - 5 sentences, improvement: What can be improved in 1 to 5 sentences`,
       },
     ],
   });
