@@ -2,7 +2,9 @@
   import { scale } from 'svelte/transition';
   import { questionsStore } from '../../lib/stores';
   import type { EvaluationResponse } from '$lib/types';
+  import CssLoader from '../../lib/css-loader.svelte';
 
+  let isLoading = false;
   let isAnswering = false;
   let gotAnswer = false;
   let questions: {
@@ -20,6 +22,7 @@
   });
 
   async function getEvaluation(question: string, answer: string) {
+    isLoading = true;
     try {
       let response;
       response = await fetch(`http://127.0.0.1:5173/api/evaluation`, {
@@ -45,6 +48,7 @@
 
       isAnswering = false;
       gotAnswer = true;
+      isLoading = false;
     } catch (error) {
       console.error('Error:', error);
     }
@@ -65,10 +69,17 @@
 <div class="page">
   <div class="container">
     <h1>
-      {questions[progressCount].question}
+      {isLoading
+        ? 'The answer is being evaluated...'
+        : gotAnswer
+        ? 'Your evaluation'
+        : questions[progressCount].question}
     </h1>
 
-    {#if gotAnswer}
+    {#if isLoading}
+      <CssLoader />
+      <div class="loading-space" />
+    {:else if gotAnswer}
       <div class="stats">
         <p>{score}/10</p>
         <p>
@@ -214,6 +225,10 @@
     display: flex;
     justify-content: space-around;
     width: 65%;
+  }
+
+  .loading-space {
+    margin-bottom: var(--spacer-4);
   }
 
   @media only screen and (max-width: 1200px) {
