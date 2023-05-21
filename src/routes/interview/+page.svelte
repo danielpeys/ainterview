@@ -3,13 +3,16 @@
   import { questionsStore } from '../../lib/stores';
   import type { EvaluationResponse } from '$lib/types';
   import CssLoader from '../../lib/css-loader.svelte';
+  import { onMount } from 'svelte';
 
   let isLoading = false;
-  let isAnswering = false;
+  let isAnsweringWithText = false;
+  let isAnsweringWithSpeech = false;
   let gotAnswer = false;
   let questions: {
     question: string;
   }[];
+
   let progressCount = 0;
   let answer: string;
   let score: number;
@@ -17,8 +20,30 @@
   let positiveFeedback: string;
   let improvementSuggestion: string;
 
+  let media: BlobPart[] | undefined = [];
+  let mediaRecorder: MediaRecorder | null = null;
+  let isRecording = false;
+  let hasRecorded = false;
+
   questionsStore.subscribe((value) => {
     questions = value.questions;
+  });
+
+  onMount(async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = (e) => media?.push(e.data);
+    mediaRecorder.onstop = function () {
+      const audioElement = document.querySelector('audio');
+      const blob = new Blob(media, { type: 'audio/mp3; codecs=opus' });
+      media = [];
+
+      if (audioElement) {
+        audioElement.src = window.URL.createObjectURL(blob);
+      }
+
+      console.log(blob);
+    };
   });
 
   async function getEvaluation(question: string, answer: string) {
@@ -46,7 +71,7 @@
       positiveFeedback = result.positive;
       improvementSuggestion = result.improvement;
 
-      isAnswering = false;
+      isAnsweringWithText = false;
       gotAnswer = true;
       isLoading = false;
     } catch (error) {
@@ -55,7 +80,7 @@
   }
 
   function reset() {
-    isAnswering = true;
+    isAnsweringWithText = true;
     gotAnswer = false;
     answer = '';
   }
@@ -103,24 +128,76 @@
           >Next question</button
         >
       </div>
-    {:else if isAnswering}
+    {:else if isAnsweringWithText}
       <textarea
         cols="50"
         rows="10"
         in:scale={{ duration: 700 }}
         bind:value={answer}
       />
-      <button
-        class="btn primary-btn"
-        on:click={() =>
-          getEvaluation(questions[progressCount].question, answer)}
-        >Submit</button
-      >
+      <div class="question-control-btns">
+        <button
+          class="btn primary-btn"
+          on:click={() => (isAnsweringWithText = false)}>Back</button
+        >
+        <button
+          class="btn primary-btn"
+          on:click={() =>
+            getEvaluation(questions[progressCount].question, answer)}
+          >Submit</button
+        >
+      </div>
+    {:else if isAnsweringWithSpeech}
+      <audio controls> Your browser does not support the audio element. </audio>
+      <div class="question-control-btns">
+        <button
+          class="btn primary-btn"
+          on:click={() => (isAnsweringWithText = false)}>Back</button
+        >
+        <button
+          class="btn primary-btn"
+          class:hide-btn={isRecording || hasRecorded}
+          on:click={() => {
+            isRecording = true;
+            if (mediaRecorder) mediaRecorder.start();
+          }}>Start Recording</button
+        >
+        <button
+          class="btn primary-btn"
+          class:hide-btn={!isRecording || hasRecorded}
+          on:click={() => {
+            isRecording = false;
+            hasRecorded = true;
+            if (mediaRecorder) mediaRecorder.stop();
+          }}>Stop Recording</button
+        >
+        <button
+          class="btn primary-btn"
+          class:hide-btn={!hasRecorded}
+          on:click={() => {
+            console.log('test');
+          }}>Retry</button
+        >
+        <button
+          class="btn primary-btn"
+          class:hide-btn={!hasRecorded}
+          on:click={() => {
+            console.log('test');
+          }}>Submit</button
+        >
+      </div>
     {:else}
-      <button
-        class="btn primary-btn"
-        on:click={() => (isAnswering = !isAnswering)}>Answer</button
-      >
+      <div class="question-control-btns">
+        <button
+          class="btn primary-btn"
+          on:click={() => (isAnsweringWithText = true)}>Answer with text</button
+        >
+        <button
+          class="btn primary-btn"
+          on:click={() => (isAnsweringWithSpeech = true)}
+          >Answer with speech</button
+        >
+      </div>
     {/if}
   </div>
 </div>
@@ -229,6 +306,10 @@
 
   .loading-space {
     margin-bottom: var(--spacer-4);
+  }
+
+  .hide-btn {
+    display: none;
   }
 
   @media only screen and (max-width: 1200px) {
