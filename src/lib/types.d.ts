@@ -23,9 +23,14 @@ export type POSTJobDescrRequestBody = {
   jobDescription: string;
 };
 
-export type POSTEvalRequestBody = {
+export type POSTEvalTextRequestBody = {
   question: string;
   answer: string;
+};
+
+export type POSTEvalSpeechRequestBody = {
+  question: string;
+  base64: string;
 };
 
 export type QuestionsResponse = {

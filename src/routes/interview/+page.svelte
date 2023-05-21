@@ -24,6 +24,7 @@
   let mediaRecorder: MediaRecorder | null = null;
   let isRecording = false;
   let hasRecorded = false;
+  let base64: string;
 
   questionsStore.subscribe((value) => {
     questions = value.questions;
@@ -33,7 +34,7 @@
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
     mediaRecorder.ondataavailable = (e) => media?.push(e.data);
-    mediaRecorder.onstop = function () {
+    mediaRecorder.onstop = async function () {
       const audioElement = document.querySelector('audio');
       const blob = new Blob(media, { type: 'audio/mp3; codecs=opus' });
       media = [];
@@ -42,24 +43,51 @@
         audioElement.src = window.URL.createObjectURL(blob);
       }
 
-      console.log(blob);
+      base64 = await blobToBase64(blob);
     };
   });
 
-  async function getEvaluation(question: string, answer: string) {
+  async function blobToBase64(blob: Blob): Promise<string> {
+    const base64String = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+
+    return (base64String as string).split(',')[1];
+  }
+
+  async function getEvaluation(
+    question: string,
+    answer?: string,
+    base64?: string
+  ) {
     isLoading = true;
     try {
       let response;
-      response = await fetch(`http://127.0.0.1:5173/api/evaluation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question,
-          answer,
-        }),
-      });
+      if (answer) {
+        response = await fetch(`http://127.0.0.1:5173/api/evaluation/text`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question,
+            answer,
+          }),
+        });
+      } else {
+        response = await fetch(`http://127.0.0.1:5173/api/evaluation/speech`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question,
+            base64,
+          }),
+        });
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -181,9 +209,9 @@
         <button
           class="btn primary-btn"
           class:hide-btn={!hasRecorded}
-          on:click={() => {
-            console.log('test');
-          }}>Submit</button
+          on:click={() =>
+            getEvaluation(questions[progressCount].question, '', base64)}
+          >Submit</button
         >
       </div>
     {:else}
