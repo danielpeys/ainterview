@@ -108,8 +108,11 @@
   }
 
   function reset() {
-    isAnsweringWithText = true;
+    isAnsweringWithText = false;
+    isAnsweringWithSpeech = false;
     gotAnswer = false;
+    isRecording = false;
+    hasRecorded = false;
     answer = '';
   }
 
