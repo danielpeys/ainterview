@@ -12,8 +12,25 @@
   let isLoading = false;
   let url: string;
   let jobDescription: string;
+  let validationMsg: string;
+
+  function isValidURL(url: string) {
+    const regex =
+      /^(?:https?:\/\/)?(?:www\.)?([^\s.]+\.[^\s]{2,}|localhost|[\d]{1,3}(?:\.[\d]{1,3}){3})(?:\/[^\s]*)?$/;
+    return regex.test(url);
+  }
 
   async function startInterview(requestType: RequestType) {
+    if (requestType === RequestType.GET && (!url || !isValidURL(url))) {
+      validationMsg = 'Please enter a valid URL';
+      return;
+    }
+
+    if (requestType === RequestType.POST && !jobDescription) {
+      validationMsg = 'Please enter a valid Job Description';
+      return;
+    }
+
     let result;
     isLoading = true;
 
@@ -60,7 +77,11 @@
       <h2>Provide the URL of the Job Description</h2>
     </div>
     <div class="url-input-group">
-      <input type="text" bind:value={url} />
+      <input
+        type="text"
+        bind:value={url}
+        on:input={() => (validationMsg = '')}
+      />
       <button class="btn" on:click={() => startInterview(RequestType.GET)}
         >START</button
       >
@@ -75,6 +96,8 @@
         rows="20"
         cols="80"
         bind:value={jobDescription}
+        on:change={() => (validationMsg = '')}
+        on:input={() => (validationMsg = '')}
       />
       <button class="btn" on:click={() => startInterview(RequestType.POST)}
         >START</button
@@ -84,9 +107,15 @@
     <CssLoader />
   {/if}
   {#if !isLoading}
+    {#if validationMsg}
+      <p>{validationMsg}</p>
+    {/if}
     <button
       class="btn"
       on:click={() => {
+        jobDescription = '';
+        url = '';
+        validationMsg = '';
         isURLInput = !isURLInput;
       }}>Swtich to {isURLInput ? 'text' : 'URL'}</button
     >
@@ -202,6 +231,12 @@
   .text-input-group button:hover {
     transform: scale(1.02);
     transition: 0.1s linear;
+  }
+
+  .container > p {
+    color: var(--col-red);
+    font-size: var(--font-size-xs);
+    margin-top: var(--spacer-1);
   }
 
   @media only screen and (max-width: 1000px) {
