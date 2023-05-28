@@ -74,6 +74,12 @@ export async function GET({ url }) {
     });
   }
 
+  if (questions.replace('.', '').toLocaleLowerCase() === 'false') {
+    throw error(400, {
+      message: 'Job description not valid',
+    });
+  }
+
   return new Response(questions);
 }
 
@@ -98,6 +104,12 @@ export async function POST({ request }) {
   if (!questions) {
     throw error(500, {
       message: 'Generating questions failed',
+    });
+  }
+
+  if (questions.replace('.', '').toLocaleLowerCase() === 'false') {
+    throw error(400, {
+      message: 'Job description not valid',
     });
   }
 
