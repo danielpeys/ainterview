@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { errorStore } from '../lib/stores';
+  import { scale } from 'svelte/transition';
+
   export let title: string;
   export let description: string;
 </script>
 
 <div class="fullscreen-div" />
-<div class="modal-container">
+<div class="modal-container" out:scale>
   <lottie-player
     src="https://assets10.lottiefiles.com/packages/lf20_bdnjxekx.json"
     background="transparent"
@@ -13,7 +16,12 @@
   />
   <h3>{title}</h3>
   <p>{description}</p>
-  <button class="btn">Close</button>
+  <button
+    class="btn"
+    on:click={() => {
+      errorStore.set('');
+    }}>Close</button
+  >
 </div>
 
 <style>

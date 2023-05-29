@@ -45,7 +45,9 @@ export type EvaluationResponse = {
   improvement: string;
 };
 
-export type Error = {
-  title: string;
-  description: string;
-};
+export type Error =
+  | {
+      title: string;
+      description: string;
+    }
+  | '';
