@@ -1,4 +1,5 @@
-import type { GPTResponse } from './types.js';
+import type { Writable } from 'svelte/store';
+import type { Error, GPTResponse } from './types.js';
 
 export async function getEvaluation(
   question: string,
@@ -24,4 +25,23 @@ export async function getEvaluation(
   const data = (await response.json()) as GPTResponse;
 
   return data.choices[0].message.content;
+}
+
+export function handleError(
+  response: Response,
+  errorDescriptions: Map<number, Error>,
+  errorStore: Writable<Error>,
+  sideEffects: Function[]
+) {
+  if (!response.ok) {
+    let error = errorDescriptions.get(response.status) || {
+      title: 'Generating Questions Failed',
+      description: 'Generating the questions failed. Please try again later!',
+    };
+
+    errorStore.set(error);
+    sideEffects.forEach((effect) => effect());
+    return true;
+  }
+  return false;
 }

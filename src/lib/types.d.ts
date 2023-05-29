@@ -44,3 +44,8 @@ export type EvaluationResponse = {
   positive: string;
   improvement: string;
 };
+
+export type Error = {
+  title: string;
+  description: string;
+};

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { questionsStore } from './stores';
+  import { questionsStore, errorStore } from './stores';
+  import {
+    urlQuestionsError,
+    textQuestionsError,
+  } from '../lib/error-descriptions';
+  import { handleError } from '../lib/utils';
   import CssLoader from './css-loader.svelte';
-
-  enum RequestType {
-    GET,
-    POST,
-  }
 
   let isURLInput = true;
   let isLoading = false;
@@ -20,13 +20,16 @@
     return regex.test(url);
   }
 
-  async function startInterview(requestType: RequestType) {
-    if (requestType === RequestType.GET && (!url || !isValidURL(url))) {
-      validationMsg = 'Please enter a valid URL';
-      return;
-    }
+  function resetPage() {
+    isURLInput = true;
+    isLoading = false;
+    url = '';
+    jobDescription = '';
+    validationMsg = '';
+  }
 
-    if (requestType === RequestType.POST && !jobDescription) {
+  async function startInterviewText() {
+    if (!jobDescription) {
       validationMsg = 'Please enter a valid Job Description';
       return;
     }
@@ -36,28 +39,49 @@
 
     try {
       let response;
-      if (requestType === RequestType.GET) {
-        response = await fetch(
-          `http://127.0.0.1:5173/api/questions?url=${url}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-      } else {
-        response = await fetch('http://127.0.0.1:5173/api/questions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ jobDescription: jobDescription }),
-        });
+
+      response = await fetch('http://127.0.0.1:5173/api/questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jobDescription: jobDescription }),
+      });
+
+      if (handleError(response, textQuestionsError, errorStore, [resetPage])) {
+        return;
       }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      result = await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+      return;
+    }
+    $questionsStore = result;
+
+    goto('/interview');
+  }
+
+  async function startInterviewURL() {
+    if (!url || !isValidURL(url)) {
+      validationMsg = 'Please enter a valid URL';
+      return;
+    }
+
+    let result;
+    isLoading = true;
+
+    try {
+      let response;
+      response = await fetch(`http://127.0.0.1:5173/api/questions?url=${url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (handleError(response, urlQuestionsError, errorStore, [resetPage])) {
+        return;
       }
 
       result = await response.json();
@@ -82,9 +106,7 @@
         bind:value={url}
         on:input={() => (validationMsg = '')}
       />
-      <button class="btn" on:click={() => startInterview(RequestType.GET)}
-        >START</button
-      >
+      <button class="btn" on:click={startInterviewURL}>START</button>
     </div>
   {:else if !isLoading}
     <div class="h2-container">
@@ -99,9 +121,7 @@
         on:change={() => (validationMsg = '')}
         on:input={() => (validationMsg = '')}
       />
-      <button class="btn" on:click={() => startInterview(RequestType.POST)}
-        >START</button
-      >
+      <button class="btn" on:click={startInterviewText}>START</button>
     </div>
   {:else}
     <CssLoader />
