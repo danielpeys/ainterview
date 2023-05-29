@@ -24,9 +24,13 @@
     </div>
   </div>
 </div>
-{#if error}
+<!-- {#if error}
   <ErrorModal title={error.title} description={error.description} />
-{/if}
+{/if} -->
+<ErrorModal
+  title="The provided URL is wrong"
+  description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam hendrerit urna in consectetur commodo. Sed vel ipsum ac elit fringilla semper sed nec eros. Morbi convallis malesuada diam, et aliquet ex ullamcorper sit amet.'}
+/>
 
 <style>
   .page {
