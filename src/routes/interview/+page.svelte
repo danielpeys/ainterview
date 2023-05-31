@@ -167,9 +167,8 @@
         bind:value={answer}
       />
       <div class="question-control-btns">
-        <button
-          class="btn primary-btn"
-          on:click={() => (isAnsweringWithText = false)}>Back</button
+        <button class="btn primary-btn back-btn" on:click={reset}
+          ><img src="./images/back-icon.svg" alt="Go back" /></button
         >
         <button
           class="btn primary-btn"
@@ -179,43 +178,63 @@
         >
       </div>
     {:else if isAnsweringWithSpeech}
-      <audio controls> Your browser does not support the audio element. </audio>
+      {#if hasRecorded}
+        <audio controls>
+          Your browser does not support the audio element.
+        </audio>
+      {/if}
+      {#if isRecording}
+        <lottie-player
+          src="https://assets3.lottiefiles.com/packages/lf20_pzrstZ.json"
+          background="transparent"
+          speed="1"
+          style="width: 150px; height: 150px;"
+          loop
+          autoplay
+        />
+      {/if}
       <div class="question-control-btns">
-        <button
-          class="btn primary-btn"
-          on:click={() => (isAnsweringWithText = false)}>Back</button
+        <button class="btn primary-btn back-btn" on:click={reset}
+          ><img src="./images/back-icon.svg" alt="Go back" /></button
         >
-        <button
-          class="btn primary-btn"
-          class:hide-btn={isRecording || hasRecorded}
-          on:click={() => {
-            isRecording = true;
-            if (mediaRecorder) mediaRecorder.start();
-          }}>Start Recording</button
-        >
-        <button
-          class="btn primary-btn"
-          class:hide-btn={!isRecording || hasRecorded}
-          on:click={() => {
-            isRecording = false;
-            hasRecorded = true;
-            if (mediaRecorder) mediaRecorder.stop();
-          }}>Stop Recording</button
-        >
-        <button
-          class="btn primary-btn"
-          class:hide-btn={!hasRecorded}
-          on:click={() => {
-            console.log('test');
-          }}>Retry</button
-        >
-        <button
-          class="btn primary-btn"
-          class:hide-btn={!hasRecorded}
-          on:click={() =>
-            getEvaluation(questions[progressCount].question, '', base64)}
-          >Submit</button
-        >
+        <div class="audio-control-buttons">
+          <button
+            class="btn primary-btn"
+            class:hide-btn={isRecording || hasRecorded}
+            on:click={() => {
+              isRecording = true;
+              if (mediaRecorder) mediaRecorder.start();
+            }}>Start Recording</button
+          >
+          <button
+            class="btn primary-btn"
+            class:hide-btn={!isRecording || hasRecorded}
+            on:click={() => {
+              isRecording = false;
+              hasRecorded = true;
+              if (mediaRecorder) mediaRecorder.stop();
+            }}>Stop Recording</button
+          >
+          <button
+            class="btn primary-btn"
+            class:hide-btn={!hasRecorded}
+            on:click={() => {
+              isRecording = false;
+              hasRecorded = false;
+              base64 = '';
+              media = [];
+            }}
+          >
+            <img src="./images/retry-icon.svg" alt="retry" />
+          </button>
+          <button
+            class="btn primary-btn"
+            class:hide-btn={!hasRecorded}
+            on:click={() =>
+              getEvaluation(questions[progressCount].question, '', base64)}
+            >Submit</button
+          >
+        </div>
       </div>
     {:else}
       <div class="question-control-btns">
@@ -335,8 +354,21 @@
     width: 65%;
   }
 
+  .audio-control-buttons {
+    display: flex;
+  }
+
+  .audio-control-buttons .btn:nth-child(3) {
+    margin-right: var(--spacer-1);
+  }
+
   .loading-space {
     margin-bottom: var(--spacer-4);
+  }
+
+  .back-btn {
+    padding-left: var(--spacer-2);
+    padding-right: var(--spacer-2);
   }
 
   .hide-btn {
