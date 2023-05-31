@@ -4,7 +4,6 @@
   import type { EvaluationResponse } from '$lib/types';
   import CssLoader from '../../lib/css-loader.svelte';
   import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
 
   let isLoading = false;
   let isAnsweringWithText = false;
