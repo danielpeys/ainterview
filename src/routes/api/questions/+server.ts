@@ -58,7 +58,11 @@ export async function GET({ url }) {
   }
 
   const $ = cheerio.load(websiteData);
-  const jobDescription = $('main').text().trim();
+  const jobDescription = $(
+    'main, .js-app-ld-ContentBlock, .jobs-box__html-content'
+  )
+    .text()
+    .trim();
 
   if (!jobDescription) {
     throw error(404, {

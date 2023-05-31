@@ -33,7 +33,7 @@
         />
         <div class="how-to-text">
           <h2>SET UP YOUR INTERVIEW</h2>
-          <p>Provide a URL or a Text which contains your job discription</p>
+          <p>Provide a URL or a text that contains your job description</p>
         </div>
       </div>
     {:else if count === 1}
@@ -47,7 +47,7 @@
         />
         <div class="how-to-text">
           <h2>READ THE QUESTION</h2>
-          <p>Your artifical interviewer will ask you questions</p>
+          <p>Your artificial interviewer will ask you questions</p>
         </div>
       </div>
     {:else if count === 2}
@@ -61,7 +61,7 @@
         />
         <div class="how-to-text">
           <h2>ANSWER THE QUESTION</h2>
-          <p>Answer the question by text</p>
+          <p>Answer the question by text or speech</p>
         </div>
       </div>
     {:else if count === 3}

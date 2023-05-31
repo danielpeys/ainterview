@@ -17,7 +17,11 @@
   function isValidURL(url: string) {
     const regex =
       /^(?:https?:\/\/)?(?:www\.)?([^\s.]+\.[^\s]{2,}|localhost|[\d]{1,3}(?:\.[\d]{1,3}){3})(?:\/[^\s]*)?$/;
-    return regex.test(url);
+    return (
+      (regex.test(url) && url.includes('xing')) ||
+      url.includes('linkedin') ||
+      url.includes('stepstone')
+    );
   }
 
   function resetPage() {
@@ -64,7 +68,8 @@
 
   async function startInterviewURL() {
     if (!url || !isValidURL(url)) {
-      validationMsg = 'Please enter a valid URL';
+      validationMsg =
+        'Please enter a valid URL. The app supports LinkedIn, Xing and Stepstone';
       return;
     }
 
