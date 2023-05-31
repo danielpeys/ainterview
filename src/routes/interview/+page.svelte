@@ -4,6 +4,7 @@
   import type { EvaluationResponse } from '$lib/types';
   import CssLoader from '../../lib/css-loader.svelte';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let isLoading = false;
   let isAnsweringWithText = false;
@@ -117,8 +118,9 @@
   }
 
   function nextQuestion() {
+    if (progressCount === questions.length - 1) window.location.href = './';
     reset();
-    if (progressCount < questions.length) progressCount += 1;
+    progressCount += 1;
   }
 </script>
 
@@ -156,7 +158,9 @@
       <div class="question-control-btns">
         <button class="btn primary-btn" on:click={reset}>Try again</button>
         <button class="btn primary-btn" on:click={nextQuestion}
-          >Next question</button
+          >{progressCount === questions.length - 1
+            ? 'End Interview'
+            : 'Next question'}</button
         >
       </div>
     {:else if isAnsweringWithText}
