@@ -57,27 +57,21 @@
     return (base64String as string).split(',')[1];
   }
 
-  async function getEvaluation(
-    question: string,
-    answer?: string,
-    base64?: string
-  ) {
+  function setResult(result: EvaluationResponse) {
+    score = result.score;
+    answerIsCorrect = result.correct;
+    positiveFeedback = result.positive;
+    improvementSuggestion = result.improvement;
+    isLoading = false;
+    gotAnswer = true;
+  }
+
+  async function getEvaluationBySpeech(question: string, base64: string) {
     isLoading = true;
     try {
-      let response;
-      if (answer) {
-        response = await fetch(`http://127.0.0.1:5173/api/evaluation/text`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question,
-            answer,
-          }),
-        });
-      } else {
-        response = await fetch(`http://127.0.0.1:5173/api/evaluation/speech`, {
+      let response = await fetch(
+        `http://127.0.0.1:5173/api/evaluation/speech`,
+        {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -86,22 +80,42 @@
             question,
             base64,
           }),
-        });
-      }
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       let result = (await response.json()) as EvaluationResponse;
-      score = result.score;
-      answerIsCorrect = result.correct;
-      positiveFeedback = result.positive;
-      improvementSuggestion = result.improvement;
+      setResult(result);
+      isAnsweringWithSpeech = false;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
+  async function getEvaluationByText(question: string, answer: string) {
+    isLoading = true;
+    try {
+      let response = await fetch(`http://127.0.0.1:5173/api/evaluation/text`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question,
+          answer,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      let result = (await response.json()) as EvaluationResponse;
+      setResult(result);
       isAnsweringWithText = false;
-      gotAnswer = true;
-      isLoading = false;
     } catch (error) {
       console.error('Error:', error);
     }
@@ -144,7 +158,7 @@
             ? 'The answer was correct'
             : 'The answer was not correct'}
         </p>
-        <p>{answerIsCorrect ? '🥳' : '😞'}</p>
+        <p>{answerIsCorrect && score > 2 ? '🥳' : '😞'}</p>
       </div>
       <div class="positive-feedback-container">
         <h3>What was good:</h3>
@@ -176,7 +190,7 @@
         <button
           class="btn primary-btn"
           on:click={() =>
-            getEvaluation(questions[progressCount].question, answer)}
+            getEvaluationByText(questions[progressCount].question, answer)}
           >Submit</button
         >
       </div>
@@ -234,7 +248,7 @@
             class="btn primary-btn"
             class:hide-btn={!hasRecorded}
             on:click={() =>
-              getEvaluation(questions[progressCount].question, '', base64)}
+              getEvaluationBySpeech(questions[progressCount].question, base64)}
             >Submit</button
           >
         </div>
