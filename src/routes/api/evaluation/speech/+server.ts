@@ -1,7 +1,7 @@
 import { OPENAI_API_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import type { POSTEvalSpeechRequestBody } from '../../../../lib/types.js';
-import { Blob } from 'node:buffer';
+import { Blob } from 'buffer';
 import { getEvaluation } from '../../../../lib/utils.js';
 
 async function getTextBySpeech(base64String: string) {
