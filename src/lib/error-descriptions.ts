@@ -26,3 +26,24 @@ export const textQuestionsError = new Map([
     },
   ],
 ]);
+
+export const textEvaluationError = new Map([
+  [
+    500,
+    {
+      title: 'Generating evaluation failed',
+      description: 'Generating evaluation failed! Please try again.',
+    },
+  ],
+]);
+
+export const speechEvaluationError = new Map([
+  [
+    500,
+    {
+      title: 'Generating evaluation failed',
+      description:
+        'Generating evaluation failed! Please try again. If the error persists, please try it with the text input.',
+    },
+  ],
+]);

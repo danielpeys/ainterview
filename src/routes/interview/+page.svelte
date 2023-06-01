@@ -1,9 +1,14 @@
 <script lang="ts">
   import { scale } from 'svelte/transition';
-  import { questionsStore } from '../../lib/stores';
+  import { errorStore, questionsStore } from '../../lib/stores';
   import type { EvaluationResponse } from '$lib/types';
   import CssLoader from '../../lib/css-loader.svelte';
   import { onMount } from 'svelte';
+  import { handleError } from '../../lib/utils';
+  import {
+    speechEvaluationError,
+    textEvaluationError,
+  } from '$lib/error-descriptions';
 
   let isLoading = false;
   let isAnsweringWithText = false;
@@ -83,8 +88,8 @@
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      if (handleError(response, speechEvaluationError, errorStore, [])) {
+        return;
       }
 
       let result = (await response.json()) as EvaluationResponse;
@@ -109,8 +114,8 @@
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      if (handleError(response, textEvaluationError, errorStore, [])) {
+        return;
       }
 
       let result = (await response.json()) as EvaluationResponse;
@@ -154,7 +159,7 @@
       <div class="stats">
         <p>{score}/10</p>
         <p>
-          {answerIsCorrect
+          {answerIsCorrect && score > 2
             ? 'The answer was correct'
             : 'The answer was not correct'}
         </p>
