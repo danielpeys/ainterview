@@ -75,7 +75,7 @@
     isLoading = true;
     try {
       let response = await fetch(
-        `https://ainterview.netlify.app/api/evaluation/speech`,
+        `http://127.0.0.1:5173/api/evaluation/speech`,
         {
           method: 'POST',
           headers: {
@@ -104,7 +104,7 @@
     isLoading = true;
     try {
       let response = await fetch(
-        `https://ainterview.netlify.app/api/evaluation/text`,
+        `http://127.0.0.1:5173/api/evaluation/text`,
         {
           method: 'POST',
           headers: {

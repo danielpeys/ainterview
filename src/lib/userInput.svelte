@@ -44,7 +44,7 @@
     try {
       let response;
 
-      response = await fetch('https://ainterview.netlify.app/api/questions', {
+      response = await fetch('http://127.0.0.1:5173/api/questions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,15 +78,12 @@
 
     try {
       let response;
-      response = await fetch(
-        `https://ainterview.netlify.app/api/questions?url=${url}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      response = await fetch(`http://127.0.0.1:5173/api/questions?url=${url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (handleError(response, urlQuestionsError, errorStore, [resetPage])) {
         return;
