@@ -300,6 +300,9 @@
   }
 
   @media only screen and (max-width: 480px) {
+    .container {
+      min-width: unset;
+    }
     .url-input-group input {
       width: 350px;
     }
