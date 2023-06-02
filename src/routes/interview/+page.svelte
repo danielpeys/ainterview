@@ -33,7 +33,15 @@
   let base64: string;
 
   questionsStore.subscribe((value) => {
-    questions = value.questions;
+    if (value) {
+      questions = value.questions;
+    }
+  });
+
+  onMount(() => {
+    if (!questions) {
+      window.location.href = './';
+    }
   });
 
   onMount(async () => {
@@ -150,7 +158,9 @@
         ? 'The answer is being evaluated...'
         : gotAnswer
         ? 'Your evaluation'
-        : questions[progressCount].question}
+        : questions
+        ? questions[progressCount].question
+        : ''}
     </h1>
 
     {#if isLoading}
