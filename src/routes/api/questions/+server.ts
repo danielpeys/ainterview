@@ -31,7 +31,7 @@ async function getQuestions(jobDescription: string) {
     messages: [
       {
         role: 'user',
-        content: `Write 1 interview questions for this job description "${jobDescription}" return the questions in a JSON Format like this {"title:"title of the job", questions":[{"question":"Question1"}]} if it's not a job description or it does not describe a real job return exactly this string: "false" do not change this string, do not provide any other information, notes or reasoning or additional characters.`,
+        content: `Write 2 interview questions for this job description "${jobDescription}" return the questions in a JSON Format like this {"title:"title of the job", questions":[{"question":"Question1"}]} if it's not a job description or it does not describe a real job return exactly this string: "false" do not change this string, do not provide any other information, notes or reasoning or additional characters.`,
       },
     ],
   });
