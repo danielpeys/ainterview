@@ -9,7 +9,7 @@
     speechEvaluationError,
     textEvaluationError,
   } from '$lib/error-descriptions';
-  import { PUBLIC_BACKEND_URL } from '$env/static/public';
+  import { PUBLIC_URL } from '$env/static/public';
 
   let isLoading = false;
   let isAnsweringWithText = false;
@@ -83,19 +83,16 @@
   async function getEvaluationBySpeech(question: string, base64: string) {
     isLoading = true;
     try {
-      let response = await fetch(
-        `${PUBLIC_BACKEND_URL}/api/evaluation/speech`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question,
-            base64,
-          }),
-        }
-      );
+      let response = await fetch(`${PUBLIC_URL}/api/evaluation/speech`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question,
+          base64,
+        }),
+      });
 
       if (handleError(response, speechEvaluationError, errorStore, [])) {
         return;
@@ -112,7 +109,7 @@
   async function getEvaluationByText(question: string, answer: string) {
     isLoading = true;
     try {
-      let response = await fetch(`${PUBLIC_BACKEND_URL}/api/evaluation/text`, {
+      let response = await fetch(`${PUBLIC_URL}/api/evaluation/text`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

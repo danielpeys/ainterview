@@ -7,7 +7,7 @@
   } from '../lib/error-descriptions';
   import { handleError } from '../lib/utils';
   import CssLoader from './css-loader.svelte';
-  import { PUBLIC_BACKEND_URL } from '$env/static/public';
+  import { PUBLIC_URL } from '$env/static/public';
 
   let isURLInput = true;
   let isLoading = false;
@@ -45,7 +45,7 @@
     try {
       let response;
 
-      response = await fetch(`${PUBLIC_BACKEND_URL}/api/questions`, {
+      response = await fetch(`${PUBLIC_URL}/api/questions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@
 
     try {
       let response;
-      response = await fetch(`${PUBLIC_BACKEND_URL}/api/questions?url=${url}`, {
+      response = await fetch(`${PUBLIC_URL}/api/questions?url=${url}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
