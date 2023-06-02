@@ -9,6 +9,7 @@
     speechEvaluationError,
     textEvaluationError,
   } from '$lib/error-descriptions';
+  import { PUBLIC_BACKEND_URL } from '$env/static/public';
 
   let isLoading = false;
   let isAnsweringWithText = false;
@@ -75,7 +76,7 @@
     isLoading = true;
     try {
       let response = await fetch(
-        `https://ainterview.netlify.app/api/evaluation/speech`,
+        `${PUBLIC_BACKEND_URL}/api/evaluation/speech`,
         {
           method: 'POST',
           headers: {
@@ -103,19 +104,16 @@
   async function getEvaluationByText(question: string, answer: string) {
     isLoading = true;
     try {
-      let response = await fetch(
-        `https://ainterview.netlify.app/api/evaluation/text`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question,
-            answer,
-          }),
-        }
-      );
+      let response = await fetch(`${PUBLIC_BACKEND_URL}/api/evaluation/text`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question,
+          answer,
+        }),
+      });
 
       if (handleError(response, textEvaluationError, errorStore, [])) {
         return;
