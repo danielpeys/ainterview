@@ -1,7 +1,5 @@
 # Ainterview
 
-![Ainterview Logo](static\images\logo.svg)
-
 ## Table of Contents
 
 - [Features](#features)
