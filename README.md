@@ -81,7 +81,7 @@ To set up the project, follow these steps:
    # OPEN_AI_KEY is the API key for OpenAI.
    OPEN_AI_KEY=<your-openai-key>
 
-   # PUBLIC_URL is the URL for the application, usually set to http://127.0.0.1:5173/ when running locally.
+   # PUBLIC_URL is the URL for the application, usually set to http://127.0.0.1:5173/ or http://localhost:5173/ when running locally.
    PUBLIC_URL=http://127.0.0.1:5173/
    ```
 
@@ -97,7 +97,7 @@ To set up the project, follow these steps:
    npm run dev
    ```
 
-6. Open your browser and visit http://127.0.0.1:5173/ to use the application.
+6. Open your browser and visit http://localhost:5173/ or http://127.0.0.1:5173/ to use the application.
 
 ## Contributing
 
